@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Graphics | Fekadu Markos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #5d78ff;
+            --dark-blue: #1a2b4b;
+            --text-gray: #6b7280;
+            --bg-light: #f8faff;
+            --orbit-speed: 20s; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            background-color: var(--bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 1300px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.07);
+            position: relative;
+            overflow: hidden;
+            padding-bottom: 40px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 60px;
+            position: relative;
+            z-index: 20;
+        }
+
+        .logo { font-size: 24px; font-weight: 800; color: var(--dark-blue); letter-spacing: -1px; }
+        .nav-links { display: flex; list-style: none; gap: 30px; }
+        .nav-links a { text-decoration: none; color: var(--dark-blue); font-size: 14px; font-weight: 500; opacity: 0.7; transition: 0.3s; cursor: pointer; }
+        .nav-links a:hover { opacity: 1; color: var(--primary-blue); }
+        
+        .btn-cv { 
+            background: var(--primary-blue); 
+            color: white; 
+            padding: 12px 28px; 
+            border-radius: 50px; 
+            text-decoration: none; 
+            font-size: 14px; 
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            padding: 40px 80px;
+            min-height: 600px;
+            gap: 40px;
+        }
+
+        .hero-text { flex: 1.2; z-index: 10; }
+        .hero-text h1 { font-size: 58px; color: var(--dark-blue); line-height: 1.1; margin-bottom: 15px; }
+        .hero-text h1 span { color: var(--primary-blue); }
+        .hero-text .job { font-size: 22px; color: var(--dark-blue); font-weight: 500; margin-bottom: 20px; }
+        .hero-text p { color: var(--text-gray); max-width: 500px; line-height: 1.8; margin-bottom: 35px; font-size: 15px; }
+
+        .hero-actions { display: flex; align-items: center; gap: 30px; }
+        .btn-about { background: var(--dark-blue); color: white; padding: 15px 35px; border-radius: 50px; text-decoration: none; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; }
+        .btn-about:hover { transform: scale(1.05); }
+
+        .socials { display: flex; gap: 20px; }
+        .socials a { color: var(--dark-blue); font-size: 20px; transition: 0.3s; text-decoration: none; opacity: 0.6; }
+        .socials a:hover { opacity: 1; color: var(--primary-blue); transform: translateY(-5px); }
+
+        .hero-image-container { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; height: 550px; }
+        .center-profile-img { position: absolute; width: 340px; height: 340px; object-fit: cover; border-radius: 50%; z-index: 5; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 8px solid white; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .orbit-track { position: absolute; width: 480px; height: 480px; border-radius: 50%; border: 1px dashed rgba(93, 120, 255, 0.2); animation: spin var(--orbit-speed) linear infinite; top: 50%; left: 50%; margin-top: -240px; margin-left: -240px; }
+        .software-icon { position: absolute; width: 65px; height: 65px; background: white; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 22px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); animation: counter-spin var(--orbit-speed) linear infinite; }
+        .ai { top: -32px; left: calc(50% - 32px); color: #ff9a00; border-bottom: 4px solid #ff9a00; }
+        .ps { bottom: 60px; right: -20px; color: #00c8ff; border-bottom: 4px solid #00c8ff; }
+        .ae { bottom: 60px; left: -20px; color: #cf96fd; border-bottom: 4px solid #cf96fd; }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes counter-spin { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26, 43, 75, 0.9); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(10px); padding: 20px; }
+        .modal-content { background: white; width: 100%; max-width: 850px; max-height: 90vh; padding: 40px; border-radius: 25px; position: relative; overflow-y: auto; }
+        .close-modal { position: absolute; top: 20px; right: 25px; font-size: 35px; cursor: pointer; color: var(--text-gray); }
+        .modal-title { color: var(--dark-blue); font-size: 32px; margin-bottom: 15px; border-bottom: 2px solid var(--primary-blue); display: inline-block; }
+
+        /* PORTFOLIO SPECIFIC STYLES */
+        .portfolio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
+        .project-card { background: #f8faff; padding: 25px; border-radius: 15px; border-top: 5px solid var(--primary-blue); }
+        .project-card h3 { color: var(--dark-blue); margin-bottom: 10px; font-size: 19px; }
+        .project-card p { font-size: 14px; color: var(--text-gray); line-height: 1.6; }
+        .tools-box { margin-top: 15px; font-size: 12px; font-weight: 700; color: var(--primary-blue); text-transform: uppercase; }
+
+        .role-section { background: var(--dark-blue); color: white; padding: 20px; border-radius: 15px; margin-top: 30px; }
+        
+        /* CONTACT SPECIFIC STYLES */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+        .contact-form { background: #f8faff; padding: 25px; border-radius: 15px; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; outline: none; font-family: inherit; }
+        .btn-send { background: var(--primary-blue); color: white; border: none; padding: 12px; border-radius: 50px; cursor: pointer; font-weight: 700; width: 100%; transition: 0.3s; }
+        .btn-send:hover { background: var(--dark-blue); }
+
+        @media (max-width: 850px) { 
+            .hero { flex-direction: column; text-align: center; } 
+            .nav-links { display: none; }
+            .portfolio-grid, .contact-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+    <header>
+        <div class="logo">Mark Graphics</div>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a onclick="openModal('aboutModal')">About</a></li>
+            <li><a onclick="openModal('portfolioModal')">Portfolio</a></li>
+            <li><a onclick="openModal('contactModal')">Contact</a></li>
+        </ul>
+       <a href="https://drive.google.com/file/d/1qQVOS4oaAwvtAh_Ol-LPNVdwoWq8SUz2/view?usp=drive_link" target="_blank" class="btn-cv">View CV</a>
+    </header>
+
+    <main class="hero">
+        <div class="hero-text">
+            <span style="color:var(--primary-blue); font-weight:700;">Hello</span>
+            <h1>I'm <span>Fekadu Markos</span></h1>
+            <p class="job">Graphic Designer & Software Engineering Student</p>
+            <p>I specialize in creating clean, modern, and visually engaging designs that communicate ideas clearly and effectively.</p>
+            
+            <div class="hero-actions">
+                <button class="btn-about" onclick="openModal('aboutModal')">About Me</button>
+                <div class="socials">
+                    <a href="https://www.facebook.com/fekadu.mark" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/fekadu_markos?igsh=MTRtdzF6azQ4OXNpbQ==" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://t.me/Fekadu_Markos" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="https://www.linkedin.com/in/fekadu-markos-a44a76320" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-image-container">
+            <img src="po.jpg" alt="Fekadu Markos" class="center-profile-img">
+            <div class="orbit-track">
+                <div class="software-icon ai">Ai</div>
+                <div class="software-icon ps">Ps</div>
+                <div class="software-icon ae">Ae</div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="modal-overlay" id="aboutModal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('aboutModal')">&times;</span>
+        <h2 class="modal-title">About Me</h2>
+        <p style="margin-top:20px; line-height:1.8; color:var(--text-gray);">My name is <strong>Fekadu Markos</strong>, a passionate graphic designer based in Ethiopia and a software engineering student. I approach design with both creativity and logic, delivering designs that are visually appealing and purposeful.</p>
+    </div>
+</div>
+
+<div class="modal-overlay" id="portfolioModal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('portfolioModal')">&times;</span>
+        <h2 class="modal-title">Portfolio</h2>
+        <p style="color:var(--text-gray); margin-top:10px;">A selection of my works that showcase visual storytelling and technical skill.</p>
+        
+        <div class="portfolio-grid">
+            <div class="project-card">
+                <h3>Logo Design</h3>
+                <p>Establishing strong brand identities with clean, minimal, and balanced concepts.</p>
+                <div class="tools-box">Tools: Adobe Illustrator</div>
+            </div>
+            <div class="project-card">
+                <h3>Branding & Identity</h3>
+                <p>Complete professional visual systems including color palettes and typography.</p>
+                <div class="tools-box">Tools: Illustrator, Photoshop</div>
+            </div>
+            <div class="project-card">
+                <h3>Social Media Design</h3>
+                <p>Engaging creative posts designed to increase brand visibility and audience growth.</p>
+                <div class="tools-box">Tools: Photoshop</div>
+            </div>
+            <div class="project-card">
+                <h3>UI / Web Design</h3>
+                <p>User-friendly website interfaces designed with intuitive layouts and modern structures.</p>
+                <div class="tools-box">Tools: Figma, Photoshop</div>
+            </div>
+        </div>
+
+        <div class="role-section">
+            <h3 style="margin-bottom:5px;">My Role: Graphic Designer</h3>
+            <p style="font-size:14px; opacity:0.9;">Concept development, visual design, layout, and presentation.</p>
+            <p style="font-size:12px; margin-top:10px; font-weight:700; color: #5d78ff;">SKILLS: Branding, UI Design, Color Theory, Creative Strategy</p>
+        </div>
+
+        <button class="btn-send" style="width:auto; padding:12px 35px; margin-top:25px;" onclick="openModal('contactModal')">Work With Me</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="contactModal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('contactModal')">&times;</span>
+        <h2 class="modal-title">Contact Me</h2>
+        <div class="contact-grid">
+            <div class="contact-info-box">
+                <h4>Contact Details</h4>
+                <p style="margin-top:15px;"><i class="fas fa-envelope"></i> fekemark6@gmail.com</p>
+                <p><i class="fab fa-whatsapp"></i> +251 927 290 916</p>
+                <p><i class="fas fa-map-marker-alt"></i> Ethiopia</p>
+            </div>
+            <div class="contact-form">
+                <h4>Send Message</h4>
+                <input type="text" id="clientName" placeholder="Your Name" required>
+                <textarea id="clientMessage" placeholder="Your Message" rows="4" required></textarea>
+                <button type="button" class="btn-send" onclick="sendToGmail()">Send Message</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function sendToGmail() {
+        const name = document.getElementById('clientName').value;
+        const message = document.getElementById('clientMessage').value;
+        const myEmail = "fekemark6@gmail.com";
+        
+        if (name === "" || message === "") {
+            alert("Please fill in your name and message!");
+            return;
+        }
+
+        const subject = encodeURIComponent("Project Inquiry from " + name);
+        const body = encodeURIComponent("Name: " + name + "\n\nMessage:\n" + message);
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${myEmail}&su=${subject}&body=${body}`;
+        
+        window.open(gmailUrl, '_blank');
+    }
+
+    function openModal(id) {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+        document.getElementById(id).style.display = 'flex';
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target.className === 'modal-overlay') {
+            event.target.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
